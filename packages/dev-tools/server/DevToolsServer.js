@@ -14,6 +14,8 @@ import createContext, { PROCESS_SOURCE } from './graphql/createContext';
 import Issues from './graphql/Issues';
 
 const serverStartTimeUTCString = new Date().toUTCString();
+// It overrides default port 19002/+
+const {EXPO_DEV_TOOLS_PORT} = process.env;
 
 function setHeaders(res) {
   // Set the Last-Modified header to server start time because otherwise it
@@ -49,7 +51,7 @@ export async function createAuthenticationContextAsync({ port }) {
 }
 
 export async function startAsync(projectDir) {
-  const port = await freeportAsync(19002, { hostnames: [null, 'localhost'] });
+  const port = EXPO_DEV_TOOLS_PORT || await freeportAsync(19002, { hostnames: [null, 'localhost'] });
   const server = express();
 
   const authenticationContext = await createAuthenticationContextAsync({ port });
